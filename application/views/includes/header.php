@@ -71,7 +71,7 @@
             <div class="navbar-brand-box">
               <a href="<?php echo url('/') ?>" class="logo logo-dark">
                 <span class="logo-sm">
-                  <img src="<?php echo $url->assets ?>samplyadmin/images/logo-sm.png" alt="logo-sm" height="30">
+                  <img src="<?php echo $url->assets ?>samplyadmin/images/logo-sm.png" alt="logo-sm" height="20">
                 </span>
                 <span class="logo-lg">
                   <img src="<?php echo $url->assets ?>samplyadmin/images/logo-dark.png" alt="logo-dark" height="40">
@@ -80,7 +80,7 @@
 
               <a href="<?php echo url('/') ?>" class="logo logo-light">
                 <span class="logo-sm">
-                  <img src="<?php echo $url->assets ?>samplyadmin/images/logo-sm-light.png" alt="logo-sm-light" height="30">
+                  <img src="<?php echo $url->assets ?>samplyadmin/images/logo-sm-light.png" alt="logo-sm-light" height="20">
                 </span>
                 <span class="logo-lg">
                   <img src="<?php echo $url->assets ?>samplyadmin/images/logo-light.png" alt="logo-light" height="40">
@@ -89,10 +89,6 @@
             </div>
 
             <button type="button" class="btn btn-sm px-3 font-size-16 vertinav-toggle header-item waves-effect" id="vertical-menu-btn">
-              <i class="fa fa-fw fa-bars"></i>
-            </button>
-
-            <button type="button" class="btn btn-sm px-3 font-size-16 horinav-toggle header-item waves-effect waves-light" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
               <i class="fa fa-fw fa-bars"></i>
             </button>
           </div>
