@@ -19,6 +19,15 @@
     </li>
   <?php endif ?>
 
+<?php if ( hasPermissions('inventory_list') ): ?>
+  <li class="<?php echo ($page->menu=='inventory') ? "mm-active" : "" ?>">
+    <a href="<?php echo url('inventory') ?>">
+      <i class='bx bx-cube'></i>
+      <span key="t-inventory">Inventory</span>
+    </a>
+  </li>
+<?php endif ?>
+
   <?php if ( hasPermissions('manajemen_user') ): ?>
   <li class="<?php echo ($page->menu=='manajemen_user') ? "mm-active" : "" ?>">
     <a href="javascript: void(0);" class="has-arrow waves-effect" aria-expanded="<?php echo ($page->menu=='manajemen_user') ? "true" : "false" ?>">

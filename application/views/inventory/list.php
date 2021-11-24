@@ -5,12 +5,12 @@
 <div class="row">
   <div class="col-12">
     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-      <h4 class="mb-sm-0 font-size-18">Konsumen</h4>
+      <h4 class="mb-sm-0 font-size-18">Inventory</h4>
 
       <div class="page-title-right">
         <ol class="breadcrumb m-0">
           <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
-          <li class="breadcrumb-item active">Konsumen</li>
+          <li class="breadcrumb-item active">Inventory</li>
         </ol>
       </div>
 
@@ -23,7 +23,7 @@
 <div class="card">
   <div class="card-body">
     <h4 class="card-title">
-      <?php if (hasPermissions('konsumen_add')): ?>
+      <?php if (hasPermissions('inventory_add')): ?>
         <a data-bs-toggle="modal" data-bs-target="#addModal" title="Tambah Data" class="btn btn-sm btn-outline-success waves-effect waves-light" ><i class="bx bx-plus"></i> Tambah Data</a>
       <?php endif ?>
     </h4>
@@ -34,27 +34,29 @@
           <th width="10">No</th>
           <th width="50">Aksi</th>
           <th width="300">Nama</th>
-          <th width="120">HP/Telp</th>
-          <th>Alamat</th>
+          <th width="50">Stok</th>
+          <th width="150">Harga Satuan</th>
+          <th>Deskripsi</th>
         </tr>
       </thead>
         
       <tbody>
         <?php $nomor = 1; ?>
-        <?php foreach ($konsumen as $row): ?>
+        <?php foreach ($inventory as $row): ?>
         <tr>
           <td class="text-center"><?php echo $nomor++; ?></td>
           <td class="text-center">
-            <?php if (hasPermissions('konsumen_edit')): ?>
-              <a title="Ubah Data" data-id="<?php echo encrypt_url($row->kons_id) ?>" data-bs-toggle="modal" data-bs-target="#editModal" class="ubah_data btn btn-sm btn-outline-warning waves-effect waves-light"><i class="bx bx-pencil"></i></a>
+            <?php if (hasPermissions('inventory_edit')): ?>
+              <a title="Ubah Data" data-id="<?php echo encrypt_url($row->inv_id) ?>" data-bs-toggle="modal" data-bs-target="#editModal" class="ubah_data btn btn-sm btn-outline-warning waves-effect waves-light"><i class="bx bx-pencil"></i></a>
             <?php endif ?>
-            <?php if (hasPermissions('konsumen_delete')): ?>
-              <a href="<?php echo url('konsumen/delete/'.encrypt_url($row->kons_id)) ?>" onclick='return confirm("Apakah Anda yakin akan menghapus data dengan Nama <?php echo $row->kons_nama ?> ?")' title="Hapus Data" class="btn btn-sm btn-outline-danger waves-effect waves-light"><i class="bx bx-trash"></i></a>
+            <?php if (hasPermissions('inventory_delete')): ?>
+              <a href="<?php echo url('inventory/delete/'.encrypt_url($row->inv_id)) ?>" onclick='return confirm("Apakah Anda yakin akan menghapus data dengan Nama <?php echo $row->inv_nama ?> ?")' title="Hapus Data" class="btn btn-sm btn-outline-danger waves-effect waves-light"><i class="bx bx-trash"></i></a>
             <?php endif ?>
           </td>
-          <td><?php echo $row->kons_nama ?></td>
-          <td><?php echo $row->kons_telp ?></td>
-          <td><?php echo $row->kons_alamat ?></td>
+          <td><?php echo $row->inv_nama ?></td>
+          <td class="text-center"><?php echo rupiah($row->inv_stok) ?></td>
+          <td class="text-end"><?php echo rupiah($row->inv_harga) ?></td>
+          <td><?php echo $row->inv_deskripsi ?></td>
         </tr>
         <?php endforeach ?>
       </tbody>
@@ -65,7 +67,7 @@
 <!-- end card -->
 
 <!-- add modal -->
-<?php echo form_open_multipart('konsumen/save', [ 'class' => 'needs-validation', 'novalidate' => '' ]); ?>
+<?php echo form_open_multipart('inventory/save', [ 'class' => 'needs-validation', 'novalidate' => '' ]); ?>
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
@@ -78,22 +80,28 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Nama</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Konsumen" autofocus required >
+              <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Barang" autofocus required >
               <div class="invalid-feedback">
-                Nama Konsumen harus diisi!
+                Nama Barang harus diisi!
               </div>
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">HP/Telp</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="telp" id="telp" placeholder="Kontak Konsumen" >
+            <label class="col-sm-2 col-form-label">Stok</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" name="stok" id="stok" placeholder="Stok Barang" >
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Alamat</label>
+            <label class="col-sm-2 col-form-label">Harga</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" name="harga" id="harga" placeholder="Harga Barang" >
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Deskripsi</label>
             <div class="col-sm-10">
-              <textarea rows="2" name="alamat" id="alamat" class="form-control" placeholder="Alamat Lengkap"></textarea>
+              <textarea rows="2" name="deskripsi" id="deskripsi" class="form-control" placeholder="Deskripsi Barang"></textarea>
             </div>
           </div>
         </div>
@@ -109,7 +117,7 @@
 <!-- end - add modal -->
 
 <!-- edit modal -->
-<?php echo form_open_multipart('konsumen/update', [ 'class' => 'needs-validation', 'novalidate' => '' ]); ?>
+<?php echo form_open_multipart('inventory/update', [ 'class' => 'needs-validation', 'novalidate' => '' ]); ?>
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
@@ -150,8 +158,9 @@ $(document).ready(function() {
       { "width": "10px", "targets": 0 },
       { "width": "100px", "bSortable": false, "targets": 1 },
       { "width": "300px", "targets": 2 },
-      { "width": "120px", "targets": 3 },
-      { "targets": 4 }
+      { "width": "50px", "targets": 3 },
+      { "width": "150px", "targets": 4 },
+      { "targets": 5 }
     ],
     dom:  
       "<'row'<'col-sm-6'B><'col-sm-6'f>>" +
@@ -181,7 +190,7 @@ $(document).ready(function() {
     
 	// memulai ajax
 	$.ajax({
-		url: "<?php echo site_url('konsumen/get_data_by_id')?>",
+		url: "<?php echo site_url('inventory/get_data_by_id')?>",
 		method: 'POST',
 		data: {id:id},
 		success:function(data){
