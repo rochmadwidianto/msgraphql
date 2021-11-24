@@ -93,7 +93,7 @@ class Inventory extends MY_Controller {
 		$result = $this->inventory_model->create([
 			'inv_nama' => $this->input->post('nama'),
 			'inv_stok' => $this->input->post('stok'),
-			'inv_harga' => $this->input->post('harga'),
+			'inv_harga' => preg_replace('/[^A-Za-z0-9\  ]/', '', ($this->input->post('harga') != '' ? $this->input->post('harga') : '0.00')),
 			'inv_deskripsi' => $this->input->post('deskripsi'),
 			'inv_user_id' => logged('id')
 		]);
@@ -122,7 +122,7 @@ class Inventory extends MY_Controller {
 		$data = [
 			'inv_nama' => $this->input->post('nama'),
 			'inv_stok' => $this->input->post('stok'),
-			'inv_harga' => $this->input->post('harga'),
+			'inv_harga' => preg_replace('/[^A-Za-z0-9\  ]/', '', ($this->input->post('harga') != '' ? $this->input->post('harga') : '0.00')),
 			'inv_deskripsi' => $this->input->post('deskripsi'),
 			'inv_user_id' => logged('id')
 		];

@@ -28,6 +28,15 @@
   </li>
 <?php endif ?>
 
+<?php if ( hasPermissions('penjualan_list') ): ?>
+  <li class="<?php echo ($page->menu=='penjualan') ? "mm-active" : "" ?>">
+    <a href="<?php echo url('penjualan') ?>">
+      <i class='bx bx-money'></i>
+      <span key="t-penjualan">Penjualan</span>
+    </a>
+  </li>
+<?php endif ?>
+
   <?php if ( hasPermissions('manajemen_user') ): ?>
   <li class="<?php echo ($page->menu=='manajemen_user') ? "mm-active" : "" ?>">
     <a href="javascript: void(0);" class="has-arrow waves-effect" aria-expanded="<?php echo ($page->menu=='manajemen_user') ? "true" : "false" ?>">

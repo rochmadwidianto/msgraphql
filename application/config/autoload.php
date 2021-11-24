@@ -142,5 +142,6 @@ $autoload['model'] = array(
 	'activity_model',
 	'bulan_model',
 	'konsumen_model',
-	'inventory_model'
+	'inventory_model',
+	'penjualan_model'
 );
