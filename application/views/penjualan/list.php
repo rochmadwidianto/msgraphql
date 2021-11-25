@@ -98,7 +98,7 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Barang</label>
             <div class="col-sm-10">
-              <select class="form-control" name="barang" placeholder="Pilih Barang" required >
+              <select class="form-control" name="barang" id="cbx_barang" placeholder="Pilih Barang" required >
                 <optgroup label="Data Barang">
                   <option value="" >Pilih Barang</option>
                   <?php foreach ($this->inventory_model->get() as $row): ?>
@@ -114,19 +114,26 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Tanggal</label>
             <div class="col-sm-4">
-              <input type="text" class="form-control flatpickr-input" name="tanggal" id="datepicker-basic" placeholder="Tanggal Transaksi" readonly="readonly">
+              <input type="text" class="form-control flatpickr-input" name="tanggal" id="datepicker-basic" value="<?php echo date('Y-m-d') ?>" placeholder="Tanggal Transaksi" readonly="readonly" required>
             </div>
           </div>
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Jumlah</label>
             <div class="col-sm-4">
-              <input type="text" class="form-control" name="jumlah" id="jumlah" placeholder="Jumlah Barang" >
+              <input type="text" class="form-control text-center jumlah currency" name="jumlah" id="jumlah" value="0" placeholder="Jumlah Barang" required >
+              <p class="text-muted"><small>Sisa Stok : <b><span class="label_nilai_sisa_stok">0</span></b></small></p>
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Harga</label>
+            <label class="col-sm-2 col-form-label">Harga Satuan</label>
             <div class="col-sm-4">
-              <input type="text" class="form-control" name="nominal" id="nominal" placeholder="Harga Barang" >
+              <input type="text" class="form-control text-end currency" name="nominal" id="nominal" value="0" placeholder="Harga Barang" readonly="readonly" required >
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Total</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control text-end fw-semibold currency" name="total" id="total" value="0" placeholder="Harga Total" readonly="readonly" required >
             </div>
           </div>
         </div>
@@ -226,4 +233,93 @@ $(document).ready(function() {
 	});
 })
 // end - for modal ubah data
+</script>
+
+<script>
+
+// for get data inventory
+ $(document).on('change', '#cbx_barang', function (e) {
+  // To stop the click propagation up to the `tr` handler
+  e.stopPropagation();
+
+  var id = $(this).val();
+  
+	// memulai ajax
+	$.ajax({
+		url: "<?php echo site_url('penjualan/get_inventory_by_id')?>",
+		method: 'POST',
+		data: {id:id},
+		success:function(data){
+
+      const arrData = JSON.parse(data);
+
+      $('.label_nilai_sisa_stok').html(arrData.sisa_stok);
+      $('#nominal').val(formatCurrency(arrData.harga));
+      
+      $('#jumlah').val(arrData.sisa_stok);
+
+      var jumlah  = clearCurrency($('#jumlah').val());
+      var nominal = clearCurrency($('#nominal').val());
+
+      var total = jumlah * nominal;
+
+      $('#total').val(formatCurrency(total));
+
+      console.log(data);
+		}
+	});
+})
+// end - for get data inventory
+
+
+// for get data inventory
+$(document).on('keyup', '.jumlah', function (e) {
+
+  var sisa_stok = $('.label_nilai_sisa_stok').html();
+
+  var jumlah  = clearCurrency($('#jumlah').val());
+  var nominal = clearCurrency($('#nominal').val());
+
+  if(jumlah > sisa_stok) {
+    $('#jumlah').val(sisa_stok);
+
+  } else {
+    var total = jumlah * nominal;
+
+    $('#total').val(formatCurrency(total));
+  }
+})
+// end - for get data inventory
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    // Format currency.
+    $('.currency').mask('000.000.000.000', {reverse: true});
+  });
+
+  function formatCurrency(num) {
+    num      = num.toString().replace(/\$|\,/g,'');
+    if(isNaN(num))
+    num      = "0";
+    sign     = (num == (num = Math.abs(num)));
+    num      = Math.floor(num*100+0.50000000001);
+    cents    = num%100;
+    num      = Math.floor(num/100).toString();
+    if(cents<10)
+    cents    = "0" + cents;
+    for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
+    num      = num.substring(0,num.length-(4*i+3))+'.'+
+    num.substring(num.length-(4*i+3));
+    // return (((sign)?'':'-') + num + ',' + cents);
+    return (((sign)?'':'-') + num);
+  }
+
+  function clearCurrency(str){
+    num      = str.toString();
+    num      = num.replace(/\$|\./g, '');
+    num      = num.replace(/\$|\,/g,'.');
+    num      = parseFloat(num);
+    return num;
+  }
 </script>

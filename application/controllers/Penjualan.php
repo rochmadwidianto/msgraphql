@@ -26,7 +26,7 @@ class Penjualan extends MY_Controller {
 
 		if($data_id) {
 			
-			$_arrData = $this->penjualan_model->getById($data_id);
+			$_arrData = $this->penjualan_model->getDataById($data_id);
 
 			// konsumen
 			$konsumenSelected = $_arrData->penj_kons_id == '' ? 'selected' : '';
@@ -64,7 +64,7 @@ class Penjualan extends MY_Controller {
 						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label">Barang</label>
 							<div class="col-sm-10">
-								<select class="form-control" name="barang" id="barang" placeholder="Pilih Barang" required >
+								<select class="form-control" name="barang" id="cbx_barang" placeholder="Pilih Barang" required >
 									<optgroup label="Data Barang">
 										'.$_cbxBarang.'
 									</optgroup>
@@ -80,18 +80,25 @@ class Penjualan extends MY_Controller {
 								<input type="text" class="form-control flatpickr-input" name="tanggal" id="datepicker-basic" value="'.$_arrData->penj_tanggal.'" placeholder="Tanggal Transaksi" readonly="readonly">
 							</div>
 						</div>
-					  	<div class="row mb-3">
+						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label">Jumlah</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control" name="jumlah" id="jumlah" value="'.rupiah($_arrData->penj_jumlah).'" placeholder="Jumlah Barang" >
+								<input type="text" class="form-control text-center jumlah currency" name="jumlah" id="jumlah" value="'.rupiah($_arrData->penj_jumlah).'" placeholder="Jumlah Barang" required >
+								<p class="text-muted"><small>Sisa Stok : <b><span class="label_nilai_sisa_stok">'.($_arrData->penj_jumlah + $_arrData->inv_stok).'</span></b></small></p>
 							</div>
 						</div>
-					  	<div class="row mb-3">
-							<label class="col-sm-2 col-form-label">Harga</label>
+						<div class="row mb-3">
+							<label class="col-sm-2 col-form-label">Harga Satuan</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control" name="nominal" id="nominal" value="'.rupiah($_arrData->penj_nominal).'"  placeholder="Harga Barang" >
+								<input type="text" class="form-control text-end currency" name="nominal" id="nominal" value="'.rupiah($_arrData->inv_harga).'" placeholder="Harga Barang" readonly="readonly" required >
 							</div>
-					  	</div>
+						</div>
+						<div class="row mb-3">
+							<label class="col-sm-2 col-form-label">Total</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control text-end fw-semibold currency" name="total" id="total" value="'.rupiah($_arrData->penj_nominal).'" placeholder="Harga Total" readonly="readonly" required >
+							</div>
+						</div>
 					</div>
 				';
 			} else {
@@ -118,6 +125,26 @@ class Penjualan extends MY_Controller {
 		}
 	}
 
+	function get_inventory_by_id() {
+		
+		postAllowed();
+		
+		$data_id = $this->input->post('id');
+		
+		$_arrData = $this->inventory_model->getById($data_id);
+
+		$data = array();
+		if(!empty($_arrData)) {
+			$data['sisa_stok'] 	= $_arrData->inv_stok;
+			$data['harga'] 		= $_arrData->inv_harga;
+		} else {
+			$data['sisa_stok'] 	= 0;
+			$data['harga'] 		= 0;
+		}
+
+		echo json_encode($data);
+	}
+
 	public function save()
 	{
 		ifPermissions('penjualan_add');
@@ -128,7 +155,7 @@ class Penjualan extends MY_Controller {
 			'penj_inv_id' => $this->input->post('barang'),
 			'penj_tanggal' => date('Y-m-d', strtotime($this->input->post('tanggal'))),
 			'penj_jumlah' => $this->input->post('jumlah'),
-			'penj_nominal' => preg_replace('/[^A-Za-z0-9\  ]/', '', ($this->input->post('nominal') != '' ? $this->input->post('nominal') : '0.00')),
+			'penj_nominal' => preg_replace('/[^A-Za-z0-9\  ]/', '', ($this->input->post('total') != '' ? $this->input->post('total') : '0.00')),
 			'penj_user_id' => logged('id')
 		]);
 
@@ -158,7 +185,7 @@ class Penjualan extends MY_Controller {
 			'penj_inv_id' => $this->input->post('barang'),
 			'penj_tanggal' => date('Y-m-d', strtotime($this->input->post('tanggal'))),
 			'penj_jumlah' => $this->input->post('jumlah'),
-			'penj_nominal' => preg_replace('/[^A-Za-z0-9\  ]/', '', ($this->input->post('nominal') != '' ? $this->input->post('nominal') : '0.00')),
+			'penj_nominal' => preg_replace('/[^A-Za-z0-9\  ]/', '', ($this->input->post('total') != '' ? $this->input->post('total') : '0.00')),
 			'penj_user_id' => logged('id')
 		];
 

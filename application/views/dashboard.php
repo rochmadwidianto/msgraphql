@@ -24,7 +24,7 @@
                                         </div>
                                         <div>
                                             <p class="text-muted text-uppercase fw-semibold">Konsumen</p>
-                                            <h4 class="mb-1 mt-1"><span class="counter-value" data-target="123">0</span></h4>
+                                            <h4 class="mb-1 mt-1"><span class="counter-value" data-target="<?php echo $total_konsumen ?>">0</span></h4>
                                         </div>
                                     </div>
                                 </div>
@@ -42,7 +42,7 @@
                                         </div>
                                         <div>
                                             <p class="text-muted text-uppercase fw-semibold">Inventory</p>
-                                            <h4 class="mb-1 mt-1"><span class="counter-value" data-target="34">0</span></h4>
+                                            <h4 class="mb-1 mt-1"><span class="counter-value" data-target="<?php echo $total_inventory ?>">0</span></h4>
                                         </div>
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@
                                         </div>
                                         <div>
                                             <p class="text-muted text-uppercase fw-semibold">Penjualan</p>
-                                            <h4 class="mb-1 mt-1"><span class="counter-value" data-target="543">0</span></h4>
+                                            <h4 class="mb-1 mt-1"><span class="counter-value" data-target="<?php echo $total_penjualan ?>">0</span></h4>
                                         </div>
                                     </div>
                                 </div>
@@ -76,14 +76,14 @@
                                         <div class="mt-1">
                                             <ul class="list-inline main-chart mb-0">
                                                 <li class="list-inline-item chart-border-left me-0">
-                                                    <h3><span data-plugin="counterup">12</span><span class="text-muted d-inline-block fw-normal font-size-15 ms-3">Konsumen</span>
+                                                    <h3><span data-plugin="counterup"><?php echo $total_konsumen ?></span><span class="text-muted d-inline-block fw-normal font-size-15 ms-3">Konsumen</span>
                                                     </h3>
                                                 </li>
                                                 <li class="list-inline-item chart-border-left me-0">
-                                                    <h3><span data-plugin="counterup">33</span><span class="text-muted d-inline-block fw-normal font-size-15 ms-3">Inventory</span></h3>
+                                                    <h3><span data-plugin="counterup"><?php echo $total_inventory ?></span><span class="text-muted d-inline-block fw-normal font-size-15 ms-3">Inventory</span></h3>
                                                 </li>
                                                 <li class="list-inline-item chart-border-left me-0">
-                                                    <h3><span data-plugin="counterup">65</span><span class="text-muted d-inline-block fw-normal font-size-15 ms-3">Penjualan</span></h3>
+                                                    <h3><span data-plugin="counterup"><?php echo $total_penjualan ?></span><span class="text-muted d-inline-block fw-normal font-size-15 ms-3">Penjualan</span></h3>
                                                 </li>
                                             </ul>
                                         </div>
@@ -124,17 +124,17 @@ var options={
         {
             name:"Konsumen",
             type:"column",
-            data:[60,66,11,23,22,58,64,60,66,11,23,22]
+            data:<?php echo $arr_konsumen_by_month ?>
         },
         {
             name:"Inventory",
             type:"column",
-            data:[23,22,58,64,60,11,58,64,60,66,11,23]
+            data:<?php echo $arr_inventory_by_month ?>
         },
         {
             name:"Penjualan",
             type:"area",
-            data:[58,64,60,66,11,58,64,60,66,11,23,22]
+            data:<?php echo $arr_penjualan_by_month ?>
         }
     ],
     fill:{

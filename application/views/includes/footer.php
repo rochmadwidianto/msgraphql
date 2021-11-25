@@ -79,6 +79,7 @@
 
     <!-- App js -->
     <script src="<?php echo $url->assets ?>samplyadmin/js/app.js"></script>
+    <script src="<?php echo $url->assets ?>samplyadmin/js/jquery.mask.min.js"></script>
 
     <script>
       $(document).ready(function () {

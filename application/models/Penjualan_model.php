@@ -23,6 +23,15 @@ class Penjualan_model extends MY_Model {
 		$this->db->order_by('penj_tanggal', 'desc');
         return $this->db->get($this->table)->result();
 	}
+
+	public function GetDataById($id) {
+		$this->db->join('konsumen', 'kons_id = penj_kons_id');
+		$this->db->join('inventory', 'inv_id = penj_inv_id');
+		$this->db->join('users', 'penj_user_id = users.id', 'left');
+		$this->db->where('penj_id', $id);
+		$this->db->group_by('penj_id');
+        return $this->db->get($this->table)->row();
+	}
 }
 
 /* End of file konsumen_model.php */
