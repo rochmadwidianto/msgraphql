@@ -26,7 +26,7 @@ class Inventory extends MY_Controller {
 
 		if($data_id) {
 			
-			$_arrData = $this->inventory_model->getById($data_id);
+			$_arrData = $this->inventory_model->GetDataById($data_id);
 
 			if(!empty($_arrData)) {
 				echo '
@@ -90,7 +90,7 @@ class Inventory extends MY_Controller {
 		ifPermissions('inventory_add');
 		postAllowed();
 		
-		$result = $this->inventory_model->create([
+		$result = $this->inventory_model->CreateData([
 			'inv_nama' => $this->input->post('nama'),
 			'inv_stok' => $this->input->post('stok'),
 			'inv_harga' => preg_replace('/[^A-Za-z0-9\  ]/', '', ($this->input->post('harga') != '' ? $this->input->post('harga') : '0.00')),
@@ -127,7 +127,7 @@ class Inventory extends MY_Controller {
 			'inv_user_id' => logged('id')
 		];
 
-		$result = $this->inventory_model->update($id, $data);
+		$result = $this->inventory_model->UpdateData($id, $data);
 
 		if((bool)$result) {
 
@@ -155,7 +155,7 @@ class Inventory extends MY_Controller {
 			$this->session->set_flashdata('alert-type', 'warning');
 			$this->session->set_flashdata('alert', 'Data tidak dapat dihapus. Data sudah digunakan!');
 		} else {
-			$this->inventory_model->delete($id);
+			$this->inventory_model->DeleteData($id);
 	
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Penghapusan data berhasil dilakukan');

@@ -85,7 +85,7 @@
               <select class="form-control" name="konsumen" placeholder="Pilih Konsumen" required >
                 <optgroup label="Data Konsumen">
                   <option value="" >Pilih Konsumen</option>
-                  <?php foreach ($this->konsumen_model->get() as $row): ?>
+                  <?php foreach ($this->konsumen_model->GetData() as $row): ?>
                     <option value="<?php echo $row->kons_id ?>" ><?php echo $row->kons_nama ?></option>
                   <?php endforeach ?>
                 </optgroup>
@@ -101,7 +101,7 @@
               <select class="form-control" name="barang" id="cbx_barang" placeholder="Pilih Barang" required >
                 <optgroup label="Data Barang">
                   <option value="" >Pilih Barang</option>
-                  <?php foreach ($this->inventory_model->get() as $row): ?>
+                  <?php foreach ($this->inventory_model->GetData() as $row): ?>
                     <option value="<?php echo $row->inv_id ?>" ><?php echo $row->inv_nama ?></option>
                   <?php endforeach ?>
                 </optgroup>

@@ -26,7 +26,7 @@ class Konsumen extends MY_Controller {
 
 		if($data_id) {
 			
-			$_arrData = $this->konsumen_model->getById($data_id);
+			$_arrData = $this->konsumen_model->GetDataById($data_id);
 
 			if(!empty($_arrData)) {
 				echo '
@@ -84,7 +84,7 @@ class Konsumen extends MY_Controller {
 		ifPermissions('konsumen_add');
 		postAllowed();
 		
-		$result = $this->konsumen_model->create([
+		$result = $this->konsumen_model->CreateData([
 			'kons_nama' => $this->input->post('nama'),
 			'kons_telp' => $this->input->post('telp'),
 			'kons_alamat' => $this->input->post('alamat'),
@@ -119,7 +119,7 @@ class Konsumen extends MY_Controller {
 			'kons_user_id' => logged('id')
 		];
 
-		$result = $this->konsumen_model->update($id, $data);
+		$result = $this->konsumen_model->UpdateData($id, $data);
 
 		if((bool)$result) {
 
@@ -147,7 +147,7 @@ class Konsumen extends MY_Controller {
 			$this->session->set_flashdata('alert-type', 'warning');
 			$this->session->set_flashdata('alert', 'Data tidak dapat dihapus. Data sudah digunakan!');
 		} else {
-			$this->konsumen_model->delete($id);
+			$this->konsumen_model->DeleteData($id);
 	
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Penghapusan data berhasil dilakukan');

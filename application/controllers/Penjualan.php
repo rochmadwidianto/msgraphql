@@ -26,12 +26,12 @@ class Penjualan extends MY_Controller {
 
 		if($data_id) {
 			
-			$_arrData = $this->penjualan_model->getDataById($data_id);
+			$_arrData = $this->penjualan_model->GetDataById($data_id);
 
 			// konsumen
 			$konsumenSelected = $_arrData->penj_kons_id == '' ? 'selected' : '';
 			$_cbxKonsumen = '<option value="" '.$konsumenSelected.'>Pilih Konsumen</option>';
-			foreach ($this->konsumen_model->get() as $row) {
+			foreach ($this->konsumen_model->GetData() as $row) {
 				$konsumenSelected = $_arrData->penj_kons_id == $row->kons_id ? 'selected' : '';
 				$_cbxKonsumen .= '<option value="'.$row->kons_id.'" '.$konsumenSelected.'>'.$row->kons_nama.'</option>';
 			}
@@ -39,7 +39,7 @@ class Penjualan extends MY_Controller {
 			// barang
 			$barangSelected = $_arrData->penj_inv_id == '' ? 'selected' : '';
 			$_cbxBarang = '<option value="" '.$barangSelected.'>Pilih Konsumen</option>';
-			foreach ($this->inventory_model->get() as $row) {
+			foreach ($this->inventory_model->GetData() as $row) {
 				$barangSelected = $_arrData->penj_inv_id == $row->inv_id ? 'selected' : '';
 				$_cbxBarang .= '<option value="'.$row->inv_id.'" '.$barangSelected.'>'.$row->inv_nama.'</option>';
 			}
@@ -131,7 +131,7 @@ class Penjualan extends MY_Controller {
 		
 		$data_id = $this->input->post('id');
 		
-		$_arrData = $this->inventory_model->getById($data_id);
+		$_arrData = $this->inventory_model->GetDataById($data_id);
 
 		$data = array();
 		if(!empty($_arrData)) {
@@ -150,7 +150,7 @@ class Penjualan extends MY_Controller {
 		ifPermissions('penjualan_add');
 		postAllowed();
 		
-		$result = $this->penjualan_model->create([
+		$result = $this->penjualan_model->CreateData([
 			'penj_kons_id' => $this->input->post('konsumen'),
 			'penj_inv_id' => $this->input->post('barang'),
 			'penj_tanggal' => date('Y-m-d', strtotime($this->input->post('tanggal'))),
@@ -189,7 +189,7 @@ class Penjualan extends MY_Controller {
 			'penj_user_id' => logged('id')
 		];
 
-		$result = $this->penjualan_model->update($id, $data);
+		$result = $this->penjualan_model->UpdateData($id, $data);
 
 		if((bool)$result) {
 
@@ -217,7 +217,7 @@ class Penjualan extends MY_Controller {
 			$this->session->set_flashdata('alert-type', 'warning');
 			$this->session->set_flashdata('alert', 'Data tidak dapat dihapus. Data sudah digunakan!');
 		} else {
-			$this->penjualan_model->delete($id);
+			$this->penjualan_model->DeleteData($id);
 	
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Penghapusan data berhasil dilakukan');
