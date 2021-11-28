@@ -89,13 +89,13 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Stok</label>
             <div class="col-sm-4">
-              <input type="text" class="form-control" name="stok" id="stok" placeholder="Stok Barang" >
+              <input type="text" class="form-control text-center currency" name="stok" id="stok" placeholder="Stok Barang" >
             </div>
           </div>
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Harga</label>
             <div class="col-sm-4">
-              <input type="text" class="form-control" name="harga" id="harga" placeholder="Harga Barang" >
+              <input type="text" class="form-control text-end currency" name="harga" id="harga" placeholder="Harga Barang" >
             </div>
           </div>
           <div class="row mb-3">
@@ -200,4 +200,36 @@ $(document).ready(function() {
 	});
 })
 // end - for modal ubah data
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    // Format currency.
+    $('.currency').mask('000.000.000.000', {reverse: true});
+  });
+
+  function formatCurrency(num) {
+    num      = num.toString().replace(/\$|\,/g,'');
+    if(isNaN(num))
+    num      = "0";
+    sign     = (num == (num = Math.abs(num)));
+    num      = Math.floor(num*100+0.50000000001);
+    cents    = num%100;
+    num      = Math.floor(num/100).toString();
+    if(cents<10)
+    cents    = "0" + cents;
+    for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
+    num      = num.substring(0,num.length-(4*i+3))+'.'+
+    num.substring(num.length-(4*i+3));
+    // return (((sign)?'':'-') + num + ',' + cents);
+    return (((sign)?'':'-') + num);
+  }
+
+  function clearCurrency(str){
+    num      = str.toString();
+    num      = num.replace(/\$|\./g, '');
+    num      = num.replace(/\$|\,/g,'.');
+    num      = parseFloat(num);
+    return num;
+  }
 </script>

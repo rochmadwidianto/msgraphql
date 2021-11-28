@@ -10,7 +10,7 @@
               </div>
               <div class="col-sm-6">
                 <div class="text-sm-end d-none d-sm-block">
-                  <small>[<b>185410014</b>] Rochmad Widianto - STMIK Akakom</small>
+                  <small>[<b>185410014</b>] Rochmad Widianto - STMIK Akakom Yogyakarta</small>
                 </div>
               </div>
             </div>

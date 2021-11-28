@@ -44,13 +44,13 @@ class Inventory extends MY_Controller {
 						<div class="row mb-3">
 							<label class="col-sm-2 col-4 col-form-label">Stok</label>
 							<div class="col-sm-4 col-8">
-								<input type="text" class="form-control" name="stok" id="stok" value="'.rupiah($_arrData->inv_stok).'" placeholder="Stok Barang" >
+								<input type="text" class="form-control text-center currency" name="stok" id="stok" value="'.rupiah($_arrData->inv_stok).'" placeholder="Stok Barang" >
 							</div>
 						</div>
 						<div class="row mb-3">
 							<label class="col-sm-2 col-4 col-form-label">Harga</label>
 							<div class="col-sm-4 col-8">
-								<input type="text" class="form-control" name="harga" id="harga" value="'.rupiah($_arrData->inv_harga).'" placeholder="Harga Barang" >
+								<input type="text" class="form-control text-end currency" name="harga" id="harga" value="'.rupiah($_arrData->inv_harga).'" placeholder="Harga Barang" >
 							</div>
 						</div>
 						<div class="row mb-3">
