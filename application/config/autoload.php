@@ -143,5 +143,6 @@ $autoload['model'] = array(
 	'bulan_model',
 	'konsumen_model',
 	'inventory_model',
-	'penjualan_model'
+	'penjualan_model',
+	'graphql_model'
 );

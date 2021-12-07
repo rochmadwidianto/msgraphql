@@ -3,9 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Lap_konsumen extends MY_Controller {
 
+	var $API_GraphQL = '';
+
 	public function __construct()
 	{
 		parent::__construct();
+		
+		$this->API_GraphQL	= '';
+
 		$this->page_data['page']->title 	= 'Laporan Konsumen';
 		$this->page_data['page']->menu 		= 'laporan';
 		$this->page_data['page']->submenu 	= 'lap_konsumen';

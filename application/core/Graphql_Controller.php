@@ -3,10 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
-use GraphQL\Type\Schema;
 use GraphQL\GraphQL;
+use GraphQL\Type\Schema;
+use GraphQL\Error\Debug;
+use GraphQL\Error\FormattedError;
+use GraphQL\Type\Definition\Type;
+use GraphQL\Type\Definition\ObjectType;
 
 abstract class Graphql_Controller extends MY_Controller
 {
@@ -19,14 +21,23 @@ abstract class Graphql_Controller extends MY_Controller
 
 	public final function index()
 	{
+		// ## Non-aktifkan error reporting
+		// -----------------------------------------------------------------------------------------------
+		// karena library ini memiliki debugger khusus
+		ini_set('display_errors', 0);
+
+		// ## Aktifkan mode debugging jika terdapat query debug (e.g: url.php?debug)
+		// -----------------------------------------------------------------------------------------------
+		$debug = !empty($_GET['debug']);
+		if ($debug) {
+			$phpErrors = [];
+			// simpan error kedalam $phpErrors untuk nantinya dihandle pada bagian bawah
+			set_error_handler(function($severity, $message, $file, $line) use (&$phpErrors) {
+				$phpErrors[] = new ErrorException($message, 0, $severity, $file, $line);
+			});
+		}
+
 		try{
-			// ## Membuat Query Type
-			// -----------------------------------------------------------------------------------------------
-			// query type adalah type yg digunakan untuk root node
-			$queryType = new ObjectType([
-				'name'	=> 'Query',
-				'fields'=> $this->init(),
-			]);
 
 			// ## Mengambil data yang dikirimkan client
 			// -----------------------------------------------------------------------------------------------
@@ -51,11 +62,26 @@ abstract class Graphql_Controller extends MY_Controller
 				$data['query'] = '{welcome}';
 			}
 
-			// jika tidak terdapat default query
-			if (!isset($data['query'])) {
-				// tampilkan error
-				throw new Exception('Invalid request.',-1);
-			}
+			// # MEMPERSIAPKAN TYPE & SKEMA
+    		// ===============================================================================================
+
+			// ## Load Types
+			// -----------------------------------------------------------------------------------------------
+			// Load beberapa type pada file lain
+			require __DIR__ . '/types/UserType.php';
+			require __DIR__ . '/types/ProductType.php';
+			require __DIR__ . '/types/ProductCategoryType.php';
+			require __DIR__ . '/types/ProductReviewType.php';
+			require __DIR__ . '/types/ProductImageType.php';
+			require __DIR__ . '/Types.php';
+
+			// ## Membuat Query Type
+			// -----------------------------------------------------------------------------------------------
+			// query type adalah type yg digunakan untuk root node
+			$queryType = new ObjectType([
+				'name'	=> 'Query',
+				'fields'=> $this->init(),
+			]);
 
 			// ## Membuat Skema
 			// -----------------------------------------------------------------------------------------------
@@ -68,35 +94,43 @@ abstract class Graphql_Controller extends MY_Controller
 				'query'=> $queryType
 			]);
 			
-			// ## Ambil Data
-			// -----------------------------------------------------------------------------------------------
-			// Ambil data dari 'query' dan 'variables'
-			$query = $data['query'];
-			$variableValues = isset($data['variables']) ? $data['variables'] : null;
-			
 			// ## Eksekusi GraphQL
 			// ===============================================================================================
-			$result = GraphQL::executeQuery($schema, $query, $this->rootValue(), NULL, $variableValues);
-			$output = $result->jsonSerialize();
+			$result = GraphQL::executeQuery(
+				$schema,
+				$data['query'],
+				null,
+				null, // $appContext,
+				(array) $data['variables']
+			);
 
-		} catch (Exception $e) {
+			// ## Memasukkan Error kedalam $result (jika ada)
+			// ===============================================================================================
+			if ($debug && !empty($phpErrors)) {
+				$result['extensions']['phpErrors'] = array_map(
+					['GraphQL\Error\FormattedError', 'createFromPHPError'],
+					$phpErrors
+				);
+			}
+
+			$httpStatus = 200;
+
+		} catch (\Exception $error) {
 			// ## Handling Exception
 			// ===============================================================================================
-			$output = [
-				'errors' => [
-					[
-						'message' 	=> $e->getMessage(),
-						'code'		=> $e->getCode()
-					]
-				]
-			];
-		} finally {
-			// ## Tampilkan Hasilnya (Berupa JSON)
-			// ===============================================================================================
-			$this
-				->output
-				->set_content_type('json')
-				->set_output(json_encode($output));
+
+			$httpStatus = 500;
+
+			if (!empty($_GET['debug'])) {
+				$result['extensions']['exception'] = FormattedError::createFromException($error);
+			} else {
+				$result['errors'] = [FormattedError::create('Unexpected Error')];
+			}
 		}
+
+		// ## Tampilkan Hasilnya (JSON)
+		// ===============================================================================================
+		header('Content-Type: application/json', true, $httpStatus);
+		echo json_encode($result);
 	}
 }

@@ -12,8 +12,11 @@ class MY_Controller extends CI_Controller {
 
 		date_default_timezone_set( setting('timezone') );
 
-		if(!is_logged()){
-			redirect('login','refresh');
+		// kecuali controller "api_graphql", maka harus login
+		if(strtolower($this->uri->segment(1)) != 'api_graphql') {
+			if(!is_logged()){
+				redirect('login','refresh');
+			}
 		}
 
 		if( !empty($this->db->username) && !empty($this->db->hostname) && !empty($this->db->database) ){ }else{
