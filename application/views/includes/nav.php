@@ -19,23 +19,59 @@
     </li>
   <?php endif ?>
 
-<?php if ( hasPermissions('inventory_list') ): ?>
-  <li class="<?php echo ($page->menu=='inventory') ? "mm-active" : "" ?>">
-    <a href="<?php echo url('inventory') ?>">
-      <i class='bx bx-cube'></i>
-      <span key="t-inventory">Inventory</span>
-    </a>
-  </li>
-<?php endif ?>
+  <?php if ( hasPermissions('inventory_list') ): ?>
+    <li class="<?php echo ($page->menu=='inventory') ? "mm-active" : "" ?>">
+      <a href="<?php echo url('inventory') ?>">
+        <i class='bx bx-cube'></i>
+        <span key="t-inventory">Inventory</span>
+      </a>
+    </li>
+  <?php endif ?>
 
-<?php if ( hasPermissions('penjualan_list') ): ?>
-  <li class="<?php echo ($page->menu=='penjualan') ? "mm-active" : "" ?>">
-    <a href="<?php echo url('penjualan') ?>">
-      <i class='bx bx-money'></i>
-      <span key="t-penjualan">Penjualan</span>
+  <?php if ( hasPermissions('penjualan_list') ): ?>
+    <li class="<?php echo ($page->menu=='penjualan') ? "mm-active" : "" ?>">
+      <a href="<?php echo url('penjualan') ?>">
+        <i class='bx bx-money'></i>
+        <span key="t-penjualan">Penjualan</span>
+      </a>
+    </li>
+  <?php endif ?>
+
+  <?php if ( hasPermissions('laporan_list') ): ?>
+  <li class="<?php echo ($page->menu=='laporan_list') ? "mm-active" : "" ?>">
+    <a href="javascript: void(0);" class="has-arrow waves-effect" aria-expanded="<?php echo ($page->menu=='laporan_list') ? "true" : "false" ?>">
+      <i class='bx bx-file'></i>
+      <span key="t-referensi">Laporan</span>
     </a>
+    <ul class="sub-menu <?php echo ($page->menu=='laporan_list') ? "mm-show" : "" ?>" aria-expanded="false">
+
+      <?php if ( hasPermissions('lap_konsumen_list') ): ?>
+      <li class="<?php echo ($page->submenu=='lap_konsumen') ? "mm-active" : "" ?>">
+        <a href="<?php echo url('lap_konsumen') ?>">
+          <span key="t-lap_konsumen">Lap Konsumen</span>
+        </a>
+      </li>
+      <?php endif ?>
+
+      <?php if ( hasPermissions('lap_inventory_list') ): ?>
+      <li class="<?php echo ($page->submenu=='lap_inventory') ? "mm-active" : "" ?>">
+        <a href="<?php echo url('lap_inventory') ?>">
+          <span key="t-lap_inventory">Lap Inventory</span>
+        </a>
+      </li>
+      <?php endif ?>
+
+      <?php if ( hasPermissions('lap_penjualan_list') ): ?>
+      <li class="<?php echo ($page->submenu=='lap_penjualan') ? "mm-active" : "" ?>">
+        <a href="<?php echo url('lap_penjualan') ?>">
+          <span key="t-lap_penjualan">Lap Penjualan</span>
+        </a>
+      </li>
+      <?php endif ?>
+
+    </ul>
   </li>
-<?php endif ?>
+  <?php endif ?>
 
   <?php if ( hasPermissions('manajemen_user') ): ?>
   <li class="<?php echo ($page->menu=='manajemen_user') ? "mm-active" : "" ?>">

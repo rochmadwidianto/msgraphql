@@ -39,5 +39,8 @@ class MY_Controller extends CI_Controller {
 
 }
 
+/*	ADDING ALL CLASS FILES */
+require_once __DIR__.DIRECTORY_SEPARATOR.'Graphql_Controller.php';
+
 /* End of file My_Controller.php */
 /* Location: ./application/core/My_Controller.php */
