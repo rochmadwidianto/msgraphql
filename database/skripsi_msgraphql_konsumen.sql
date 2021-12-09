@@ -25,11 +25,11 @@ CREATE TABLE `konsumen` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`kons_id`),
   KEY `FK_konsumen_user_id` (`kons_user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `konsumen` */
 
-insert  into `konsumen`(`kons_id`,`kons_nama`,`kons_telp`,`kons_alamat`,`kons_user_id`,`created_at`) values (1,'xxx','121231312','dasdasd',1,'2021-11-21 11:48:35');
+insert  into `konsumen`(`kons_id`,`kons_nama`,`kons_telp`,`kons_alamat`,`kons_user_id`,`created_at`) values (1,'Budiman','088112233445','Yogyakarta',1,'2021-11-21 11:48:35'),(2,'Hermawan','081234567890','Yogyakarta',1,'2021-12-08 21:29:43');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

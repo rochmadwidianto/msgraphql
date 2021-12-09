@@ -62,8 +62,6 @@ class Users_model extends MY_Model {
 			set_cookie( 'logged', json_encode($data), $expiry );
 
 		}
-
-		$this->activity_model->add($row->nama.' Logged in', $row->id);
 	}
 
 	public function logout()

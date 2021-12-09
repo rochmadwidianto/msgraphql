@@ -29,25 +29,21 @@ class Types extends Type
         return static::getInstance(UserType::class);
     }
 
-    public static function product()
+    public static function konsumen()
     {
-        return static::getInstance(ProductType::class);
+        return static::getInstance(KonsumenType::class);
     }
 
-    public static function productImage()
+    public static function inventory()
     {
-        return static::getInstance(ProductImageType::class);
+        return static::getInstance(InventoryType::class);
     }
 
-    public static function productReview()
+    public static function penjualan()
     {
-        return static::getInstance(ProductReviewType::class);
+        return static::getInstance(PenjualanType::class);
     }
-
-    public static function productCategory()
-    {
-        return static::getInstance(ProductCategoryType::class);
-    }
+    
 
     protected static function getInstance($class, $arg = null)
     {

@@ -12,7 +12,7 @@ class UserType extends ObjectType
     {
         $config = [
             'name' => 'User',
-            'description' => 'App user',
+            'description' => 'Data User',
             'fields' => function() {
                 return [
                     'id' => [
@@ -21,10 +21,19 @@ class UserType extends ObjectType
                             return (int) $value->id;
                         }
                     ],
+                    'nama' => [
+                        'type' => Types::string()
+                    ],
+                    'username' => [
+                        'type' => Types::string()
+                    ],
+                    'telp' => [
+                        'type' => Types::string()
+                    ],
                     'email' => [
                         'type' => Types::string()
                     ],
-                    'nama' => [
+                    'alamat' => [
                         'type' => Types::string()
                     ]
                 ];

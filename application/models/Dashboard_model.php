@@ -3,24 +3,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dashboard_model extends MY_Model {
 
+	private $_dbDefault;
+	private $_dbKonsumen;
+	private $_dbInventory;
+	private $_dbPenjualan;
+
 	public function __construct()
 	{
+		$this->_dbDefault	= $this->getValueByKey('db_default');
+		$this->_dbInventory	= $this->getValueByKey('db_inventory');
+		$this->_dbKonsumen	= $this->getValueByKey('db_konsumen');
+		$this->_dbPenjualan	= $this->getValueByKey('db_penjualan');
+
 		parent::__construct();
+	}
+
+	public function getValueByKey($key = '')
+	{
+		return ($query = $this->db->get_where('settings', ['key' => $key], 1)) && $query->num_rows() > 0 ? $query->row()->value : null;
 	}
 
 	public function CountDataKonsumen() {
 
-        return $this->db->count_all_results('konsumen');
+        return $this->db->count_all_results($this->_dbKonsumen.'.konsumen');
 	}
 
 	public function CountDataInventory() {
 
-        return $this->db->count_all_results('inventory');
+        return $this->db->count_all_results($this->_dbInventory.'.inventory');
 	}
 
 	public function CountDataPenjualan() {
 
-        return $this->db->count_all_results('penjualan');
+        return $this->db->count_all_results($this->_dbPenjualan.'.penjualan');
 	}
 
 	function CountDataKonsumenPerBulan(){
@@ -42,7 +57,7 @@ class Dashboard_model extends MY_Model {
 			SELECT 
 				MONTH(DATE(created_at)) AS data_bulan,
 				COUNT(kons_id) AS data_jumlah
-			FROM konsumen
+			FROM ".$this->_dbKonsumen.".konsumen
 			WHERE 
 				YEAR(DATE(created_at)) = YEAR(DATE(NOW()))
 			GROUP BY MONTH(DATE(created_at))
@@ -74,7 +89,7 @@ class Dashboard_model extends MY_Model {
 			SELECT 
 				MONTH(DATE(created_at)) AS data_bulan,
 				COUNT(inv_id) AS data_jumlah
-			FROM inventory
+			FROM ".$this->_dbInventory.".inventory
 			WHERE 
 				YEAR(DATE(created_at)) = YEAR(DATE(NOW()))
 			GROUP BY MONTH(DATE(created_at))
@@ -106,7 +121,7 @@ class Dashboard_model extends MY_Model {
 			SELECT 
 				MONTH(penj_tanggal) AS data_bulan,
 				COUNT(penj_id) AS data_jumlah
-			FROM penjualan
+			FROM ".$this->_dbPenjualan.".penjualan
 			WHERE 
 				YEAR(penj_tanggal) = YEAR(DATE(NOW()))
 			GROUP BY MONTH(penj_tanggal)

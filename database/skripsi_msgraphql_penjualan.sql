@@ -29,11 +29,11 @@ CREATE TABLE `penjualan` (
   KEY `FK_penj_konsumen` (`penj_kons_id`),
   KEY `FK_penj_inventory` (`penj_inv_id`),
   KEY `FK_penj_user` (`penj_user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `penjualan` */
 
-insert  into `penjualan`(`penj_id`,`penj_kons_id`,`penj_inv_id`,`penj_tanggal`,`penj_jumlah`,`penj_nominal`,`penj_user_id`,`created_at`) values (2,1,2,'2021-11-15',3,'3400000.00',1,'2021-11-24 22:46:21'),(5,1,2,'2021-11-16',1,'230000.00',1,'2021-11-25 10:31:43');
+insert  into `penjualan`(`penj_id`,`penj_kons_id`,`penj_inv_id`,`penj_tanggal`,`penj_jumlah`,`penj_nominal`,`penj_user_id`,`created_at`) values (1,1,2,'2021-12-08',2,'4600000.00',1,'2021-12-08 22:46:21');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

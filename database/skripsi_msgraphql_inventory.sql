@@ -30,7 +30,7 @@ CREATE TABLE `inventory` (
 
 /*Data for the table `inventory` */
 
-insert  into `inventory`(`inv_id`,`inv_nama`,`inv_deskripsi`,`inv_stok`,`inv_harga`,`inv_user_id`,`created_at`) values (2,'Mouse Edit','XXX',12,'500000.00',1,'2021-11-24 22:01:42');
+insert  into `inventory`(`inv_id`,`inv_nama`,`inv_deskripsi`,`inv_stok`,`inv_harga`,`inv_user_id`,`created_at`) values (1,'Printer','3 in 1',12,'2300000.00',1,'2021-11-24 22:01:42'),(2,'Mouse Wireless','Warna Hitam',30,'150000.00',1,'2021-12-09 21:07:44');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

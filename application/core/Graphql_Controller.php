@@ -14,11 +14,6 @@ abstract class Graphql_Controller extends MY_Controller
 {
 	public abstract function init();
 
-	public function rootValue()
-	{
-		return [];
-	}
-
 	public final function index()
 	{
 		// ## Non-aktifkan error reporting
@@ -69,10 +64,10 @@ abstract class Graphql_Controller extends MY_Controller
 			// -----------------------------------------------------------------------------------------------
 			// Load beberapa type pada file lain
 			require __DIR__ . '/types/UserType.php';
-			require __DIR__ . '/types/ProductType.php';
-			require __DIR__ . '/types/ProductCategoryType.php';
-			require __DIR__ . '/types/ProductReviewType.php';
-			require __DIR__ . '/types/ProductImageType.php';
+			require __DIR__ . '/types/KonsumenType.php';
+			require __DIR__ . '/types/InventoryType.php';
+			require __DIR__ . '/types/PenjualanType.php';
+			
 			require __DIR__ . '/Types.php';
 
 			// ## Membuat Query Type
@@ -100,7 +95,7 @@ abstract class Graphql_Controller extends MY_Controller
 				$schema,
 				$data['query'],
 				null,
-				null, // $appContext,
+				null,
 				(array) $data['variables']
 			);
 
