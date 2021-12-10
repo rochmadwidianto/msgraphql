@@ -12,7 +12,7 @@ class MY_Controller extends CI_Controller {
 		date_default_timezone_set( setting('timezone') );
 
 		// kecuali controller "api_graphql", maka harus login
-		if(strtolower($this->uri->segment(1)) != 'api_graphql') {
+		if(strtolower($this->uri->segment(1)) != 'graphql') {
 			if(!is_logged()){
 				redirect('login','refresh');
 			}
