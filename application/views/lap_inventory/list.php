@@ -41,10 +41,10 @@
         <?php foreach ($lap_inventory as $row): ?>
         <tr>
           <td class="text-center"><?php echo $nomor++; ?></td>
-          <td><?php echo $row->inv_nama ?></td>
-          <td class="text-center"><?php echo rupiah($row->inv_stok) ?></td>
-          <td class="text-end"><?php echo rupiah($row->inv_harga) ?></td>
-          <td><?php echo $row->inv_deskripsi ?></td>
+          <td><?php echo $row->nama ?></td>
+          <td class="text-center"><?php echo rupiah($row->stok) ?></td>
+          <td class="text-end"><?php echo rupiah($row->harga) ?></td>
+          <td><?php echo $row->deskripsi ?></td>
         </tr>
         <?php endforeach ?>
       </tbody>

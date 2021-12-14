@@ -14,7 +14,27 @@ class Penjualan extends MY_Controller {
 	{
 		ifPermissions('penjualan_list');
 
-		$this->page_data['penjualan'] = $this->penjualan_model->GetData();
+		// graphql client / request
+		
+		// attribute / data dibawah ini disediakan oleh server namun tidak digunakan
+		// kons_id, kons_telp, kons_alamat, inv_id, inv_deskripsi, inv_stok, inv_harga
+		$query = <<<GQL
+			query {
+				penjualan {
+					id
+					kons_nama
+					inv_nama
+					tanggal
+					jumlah
+					nominal
+				}
+			}
+		GQL;
+
+		$_arrData = $this->graphql_request($query);
+		// end
+
+		$this->page_data['penjualan'] = $_arrData->penjualan;
 		$this->load->view('penjualan/list', $this->page_data);
 	}
 
@@ -22,31 +42,54 @@ class Penjualan extends MY_Controller {
 	{
 		postAllowed();
 		
-		$data_id = decrypt_url($this->input->post('id'));
+		$data_id = (int)decrypt_url($this->input->post('id'));
 
 		if($data_id) {
 			
-			$_arrData = $this->penjualan_model->GetDataById($data_id);
+			// graphql client / request
+		
+			// attribute / data dibawah ini disediakan oleh server namun tidak digunakan
+			// kons_telp, kons_alamat, inv_deskripsi
+			$query = <<<GQL
+				query {
+					penjualan_by_id(id: {$data_id}) {
+						id
+						kons_id
+						kons_nama
+						inv_id
+						inv_nama
+						inv_stok
+						inv_harga
+						tanggal
+						jumlah
+						nominal
+					}
+				}
+			GQL;
+
+			$_arrData = $this->graphql_request($query);
+			$_arrData = $_arrData->penjualan_by_id;
+			// end
 
 			// konsumen
-			$konsumenSelected = $_arrData->penj_kons_id == '' ? 'selected' : '';
+			$konsumenSelected = $_arrData->kons_id == '' ? 'selected' : '';
 			$_cbxKonsumen = '<option value="" '.$konsumenSelected.'>Pilih Konsumen</option>';
 			foreach ($this->konsumen_model->GetData() as $row) {
-				$konsumenSelected = $_arrData->penj_kons_id == $row->kons_id ? 'selected' : '';
+				$konsumenSelected = $_arrData->kons_id == $row->kons_id ? 'selected' : '';
 				$_cbxKonsumen .= '<option value="'.$row->kons_id.'" '.$konsumenSelected.'>'.$row->kons_nama.'</option>';
 			}
 			
 			// barang
-			$barangSelected = $_arrData->penj_inv_id == '' ? 'selected' : '';
+			$barangSelected = $_arrData->inv_id == '' ? 'selected' : '';
 			$_cbxBarang = '<option value="" '.$barangSelected.'>Pilih Konsumen</option>';
 			foreach ($this->inventory_model->GetData() as $row) {
-				$barangSelected = $_arrData->penj_inv_id == $row->inv_id ? 'selected' : '';
+				$barangSelected = $_arrData->inv_id == $row->inv_id ? 'selected' : '';
 				$_cbxBarang .= '<option value="'.$row->inv_id.'" '.$barangSelected.'>'.$row->inv_nama.'</option>';
 			}
 
 			if(!empty($_arrData)) {
 				echo '
-					<input type="hidden" class="form-control" name="id" id="id" value="'.encrypt_url($_arrData->penj_id).'" readonly required >
+					<input type="hidden" class="form-control" name="id" id="id" value="'.encrypt_url($_arrData->id).'" readonly required >
 					<div>
 						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label">Konsumen</label>
@@ -77,14 +120,14 @@ class Penjualan extends MY_Controller {
 						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label">Tanggal</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control flatpickr-input" name="tanggal" id="datepicker-basic" value="'.$_arrData->penj_tanggal.'" placeholder="Tanggal Transaksi" readonly="readonly">
+								<input type="text" class="form-control flatpickr-input" name="tanggal" id="datepicker-basic" value="'.$_arrData->tanggal.'" placeholder="Tanggal Transaksi" readonly="readonly">
 							</div>
 						</div>
 						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label">Jumlah</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control text-center jumlah currency" name="jumlah" id="jumlah" value="'.rupiah($_arrData->penj_jumlah).'" placeholder="Jumlah Barang" required >
-								<p class="text-muted"><small>Sisa Stok : <b><span class="label_nilai_sisa_stok">'.($_arrData->penj_jumlah + $_arrData->inv_stok).'</span></b></small></p>
+								<input type="text" class="form-control text-center jumlah currency" name="jumlah" id="jumlah" value="'.rupiah($_arrData->jumlah).'" placeholder="Jumlah Barang" required >
+								<p class="text-muted"><small>Sisa Stok : <b><span class="label_nilai_sisa_stok">'.($_arrData->jumlah + $_arrData->inv_stok).'</span></b></small></p>
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -96,7 +139,7 @@ class Penjualan extends MY_Controller {
 						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label">Total</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control text-end fw-semibold currency" name="total" id="total" value="'.rupiah($_arrData->penj_nominal).'" placeholder="Harga Total" readonly="readonly" required >
+								<input type="text" class="form-control text-end fw-semibold currency" name="total" id="total" value="'.rupiah($_arrData->nominal).'" placeholder="Harga Total" readonly="readonly" required >
 							</div>
 						</div>
 					</div>

@@ -15,7 +15,23 @@ class Lap_inventory extends MY_Controller {
 	{
 		ifPermissions('lap_inventory_list');
 
-		$this->page_data['lap_inventory'] = $this->inventory_model->GetData();
+		// graphql client / request
+		// attribute "id" tersedia tapi tidak digunakan
+		$query = <<<GQL
+			query {
+				inventory {
+					nama
+					deskripsi
+					stok
+					harga
+				}
+			}
+		GQL;
+
+		$_arrData = $this->graphql_request($query);
+		// end
+
+		$this->page_data['lap_inventory'] = $_arrData->inventory;
 		$this->load->view('lap_inventory/list', $this->page_data);
 	}
 }

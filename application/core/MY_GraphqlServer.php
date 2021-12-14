@@ -10,7 +10,7 @@ use GraphQL\Error\FormattedError;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
 
-abstract class Graphql_Controller extends MY_Controller
+abstract class MY_GraphqlServer extends MY_Controller
 {
 	public abstract function init();
 

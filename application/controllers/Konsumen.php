@@ -14,7 +14,22 @@ class Konsumen extends MY_Controller {
 	{
 		ifPermissions('konsumen_list');
 
-		$this->page_data['konsumen'] = $this->konsumen_model->GetData();
+		// graphql client / request
+		$query = <<<GQL
+			query {
+				konsumen {
+					id
+					nama
+					telp
+					alamat
+				}
+			}
+		GQL;
+
+		$_arrData = $this->graphql_request($query);
+		// end
+
+		$this->page_data['konsumen'] = $_arrData->konsumen;
 		$this->load->view('konsumen/list', $this->page_data);
 	}
 
@@ -22,20 +37,34 @@ class Konsumen extends MY_Controller {
 	{
 		postAllowed();
 		
-		$data_id = decrypt_url($this->input->post('id'));
+		$data_id = (int)decrypt_url($this->input->post('id'));
 
 		if($data_id) {
-			
-			$_arrData = $this->konsumen_model->GetDataById($data_id);
+
+			// graphql client / request
+			$query = <<<GQL
+				query {
+					konsumen_by_id(id: {$data_id}) {
+						id
+						nama
+						telp
+						alamat
+					}
+				}
+			GQL;
+
+			$_arrData = $this->graphql_request($query);
+			$_arrData = $_arrData->konsumen_by_id;
+			// end
 
 			if(!empty($_arrData)) {
 				echo '
-					<input type="hidden" class="form-control" name="id" id="id" value="'.encrypt_url($_arrData->kons_id).'" readonly required >
+					<input type="hidden" class="form-control" name="id" id="id" value="'.encrypt_url($_arrData->id).'" readonly required >
 					<div>
 						<div class="row mb-3">
 							<label class="col-sm-2 col-4 col-form-label">Nama</label>
 							<div class="col-sm-10 col-8">
-								<input type="text" class="form-control" name="nama" id="nama" value="'.$_arrData->kons_nama.'" placeholder="Nama Konsumen" autofocus required >
+								<input type="text" class="form-control" name="nama" id="nama" value="'.$_arrData->nama.'" placeholder="Nama Konsumen" autofocus required >
 								<div class="invalid-feedback">
 								Nama Konsumen harus diisi!
 								</div>
@@ -44,13 +73,13 @@ class Konsumen extends MY_Controller {
 						<div class="row mb-3">
 							<label class="col-sm-2 col-4 col-form-label">HP/Telp</label>
 							<div class="col-sm-10 col-8">
-								<input type="text" class="form-control" name="telp" id="telp" value="'.$_arrData->kons_telp.'" placeholder="Kontak Konsumen" >
+								<input type="text" class="form-control" name="telp" id="telp" value="'.$_arrData->telp.'" placeholder="Kontak Konsumen" >
 							</div>
 						</div>
 						<div class="row mb-3">
 						  <label class="col-sm-2 col-form-label">Alamat</label>
 						  <div class="col-sm-10">
-							<textarea rows="2" name="alamat" id="alamat" class="form-control" placeholder="Alamat Lengkap">'.$_arrData->kons_alamat.'</textarea>
+							<textarea rows="2" name="alamat" id="alamat" class="form-control" placeholder="Alamat Lengkap">'.$_arrData->alamat.'</textarea>
 						  </div>
 						</div>
 					</div>

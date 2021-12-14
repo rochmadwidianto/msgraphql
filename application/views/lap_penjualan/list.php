@@ -44,9 +44,9 @@
           <td class="text-center"><?php echo $nomor++; ?></td>
           <td><?php echo $row->kons_nama ?></td>
           <td><?php echo $row->inv_nama ?></td>
-          <td class="text-center"><?php echo tgl_indo($row->penj_tanggal) ?></td>
-          <td class="text-center"><?php echo rupiah($row->penj_jumlah) ?></td>
-          <td class="text-end"><?php echo rupiah($row->penj_nominal) ?></td>
+          <td class="text-center"><?php echo tgl_indo($row->tanggal) ?></td>
+          <td class="text-center"><?php echo rupiah($row->jumlah) ?></td>
+          <td class="text-end"><?php echo rupiah($row->nominal) ?></td>
         </tr>
         <?php endforeach ?>
       </tbody>

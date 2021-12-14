@@ -20,7 +20,22 @@ class Lap_konsumen extends MY_Controller {
 	{
 		ifPermissions('lap_konsumen_list');
 
-		$this->page_data['lap_konsumen'] = $this->konsumen_model->GetData();
+		// graphql client / request
+		// attribute "id" tersedia tapi tidak digunakan
+		$query = <<<GQL
+			query {
+				konsumen {
+					nama
+					telp
+					alamat
+				}
+			}
+		GQL;
+
+		$_arrData = $this->graphql_request($query);
+		// end
+
+		$this->page_data['lap_konsumen'] = $_arrData->konsumen;
 		$this->load->view('lap_konsumen/list', $this->page_data);
 	}
 }

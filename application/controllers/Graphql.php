@@ -2,7 +2,7 @@
 
 use GraphQL\Type\Definition\Type;
 
-class Graphql extends Graphql_Controller
+class Graphql extends MY_GraphqlServer
 {
 
 	public function init()

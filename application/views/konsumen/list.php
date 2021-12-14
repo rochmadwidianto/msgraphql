@@ -46,15 +46,15 @@
           <td class="text-center"><?php echo $nomor++; ?></td>
           <td class="text-center">
             <?php if (hasPermissions('konsumen_edit')): ?>
-              <a title="Ubah Data" data-id="<?php echo encrypt_url($row->kons_id) ?>" data-bs-toggle="modal" data-bs-target="#editModal" class="ubah_data btn btn-sm btn-outline-warning waves-effect waves-light"><i class="bx bx-pencil"></i></a>
+              <a title="Ubah Data" data-id="<?php echo encrypt_url($row->id) ?>" data-bs-toggle="modal" data-bs-target="#editModal" class="ubah_data btn btn-sm btn-outline-warning waves-effect waves-light"><i class="bx bx-pencil"></i></a>
             <?php endif ?>
             <?php if (hasPermissions('konsumen_delete')): ?>
-              <a href="<?php echo url('konsumen/delete/'.encrypt_url($row->kons_id)) ?>" onclick='return confirm("Apakah Anda yakin akan menghapus data dengan Nama <?php echo $row->kons_nama ?> ?")' title="Hapus Data" class="btn btn-sm btn-outline-danger waves-effect waves-light"><i class="bx bx-trash"></i></a>
+              <a href="<?php echo url('konsumen/delete/'.encrypt_url($row->id)) ?>" onclick='return confirm("Apakah Anda yakin akan menghapus data dengan Nama <?php echo $row->nama ?> ?")' title="Hapus Data" class="btn btn-sm btn-outline-danger waves-effect waves-light"><i class="bx bx-trash"></i></a>
             <?php endif ?>
           </td>
-          <td><?php echo $row->kons_nama ?></td>
-          <td><?php echo $row->kons_telp ?></td>
-          <td><?php echo $row->kons_alamat ?></td>
+          <td><?php echo $row->nama ?></td>
+          <td><?php echo $row->telp ?></td>
+          <td><?php echo $row->alamat ?></td>
         </tr>
         <?php endforeach ?>
       </tbody>

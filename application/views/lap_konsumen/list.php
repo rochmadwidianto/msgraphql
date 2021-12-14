@@ -40,9 +40,9 @@
         <?php foreach ($lap_konsumen as $row): ?>
         <tr>
           <td class="text-center"><?php echo $nomor++; ?></td>
-          <td><?php echo $row->kons_nama ?></td>
-          <td><?php echo $row->kons_telp ?></td>
-          <td><?php echo $row->kons_alamat ?></td>
+          <td><?php echo $row->nama ?></td>
+          <td><?php echo $row->telp ?></td>
+          <td><?php echo $row->alamat ?></td>
         </tr>
         <?php endforeach ?>
       </tbody>

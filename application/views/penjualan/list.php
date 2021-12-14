@@ -48,17 +48,17 @@
           <td class="text-center"><?php echo $nomor++; ?></td>
           <td class="text-center">
             <?php if (hasPermissions('penjualan_edit')): ?>
-              <a title="Ubah Data" data-id="<?php echo encrypt_url($row->penj_id) ?>" data-bs-toggle="modal" data-bs-target="#editModal" class="ubah_data btn btn-sm btn-outline-warning waves-effect waves-light"><i class="bx bx-pencil"></i></a>
+              <a title="Ubah Data" data-id="<?php echo encrypt_url($row->id) ?>" data-bs-toggle="modal" data-bs-target="#editModal" class="ubah_data btn btn-sm btn-outline-warning waves-effect waves-light"><i class="bx bx-pencil"></i></a>
             <?php endif ?>
             <?php if (hasPermissions('penjualan_delete')): ?>
-              <a href="<?php echo url('penjualan/delete/'.encrypt_url($row->penj_id)) ?>" onclick='return confirm("Apakah Anda yakin akan menghapus data dengan Nama Konsumen <?php echo $row->kons_nama ?> ?")' title="Hapus Data" class="btn btn-sm btn-outline-danger waves-effect waves-light"><i class="bx bx-trash"></i></a>
+              <a href="<?php echo url('penjualan/delete/'.encrypt_url($row->id)) ?>" onclick='return confirm("Apakah Anda yakin akan menghapus data dengan Nama Konsumen <?php echo $row->kons_nama ?> ?")' title="Hapus Data" class="btn btn-sm btn-outline-danger waves-effect waves-light"><i class="bx bx-trash"></i></a>
             <?php endif ?>
           </td>
           <td><?php echo $row->kons_nama ?></td>
           <td><?php echo $row->inv_nama ?></td>
-          <td class="text-center"><?php echo tgl_indo($row->penj_tanggal) ?></td>
-          <td class="text-center"><?php echo rupiah($row->penj_jumlah) ?></td>
-          <td class="text-end"><?php echo rupiah($row->penj_nominal) ?></td>
+          <td class="text-center"><?php echo tgl_indo($row->tanggal) ?></td>
+          <td class="text-center"><?php echo rupiah($row->jumlah) ?></td>
+          <td class="text-end"><?php echo rupiah($row->nominal) ?></td>
         </tr>
         <?php endforeach ?>
       </tbody>

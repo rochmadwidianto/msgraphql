@@ -47,16 +47,16 @@
           <td class="text-center"><?php echo $nomor++; ?></td>
           <td class="text-center">
             <?php if (hasPermissions('inventory_edit')): ?>
-              <a title="Ubah Data" data-id="<?php echo encrypt_url($row->inv_id) ?>" data-bs-toggle="modal" data-bs-target="#editModal" class="ubah_data btn btn-sm btn-outline-warning waves-effect waves-light"><i class="bx bx-pencil"></i></a>
+              <a title="Ubah Data" data-id="<?php echo encrypt_url($row->id) ?>" data-bs-toggle="modal" data-bs-target="#editModal" class="ubah_data btn btn-sm btn-outline-warning waves-effect waves-light"><i class="bx bx-pencil"></i></a>
             <?php endif ?>
             <?php if (hasPermissions('inventory_delete')): ?>
-              <a href="<?php echo url('inventory/delete/'.encrypt_url($row->inv_id)) ?>" onclick='return confirm("Apakah Anda yakin akan menghapus data dengan Nama <?php echo $row->inv_nama ?> ?")' title="Hapus Data" class="btn btn-sm btn-outline-danger waves-effect waves-light"><i class="bx bx-trash"></i></a>
+              <a href="<?php echo url('inventory/delete/'.encrypt_url($row->id)) ?>" onclick='return confirm("Apakah Anda yakin akan menghapus data dengan Nama <?php echo $row->nama ?> ?")' title="Hapus Data" class="btn btn-sm btn-outline-danger waves-effect waves-light"><i class="bx bx-trash"></i></a>
             <?php endif ?>
           </td>
-          <td><?php echo $row->inv_nama ?></td>
-          <td class="text-center"><?php echo rupiah($row->inv_stok) ?></td>
-          <td class="text-end"><?php echo rupiah($row->inv_harga) ?></td>
-          <td><?php echo $row->inv_deskripsi ?></td>
+          <td><?php echo $row->nama ?></td>
+          <td class="text-center"><?php echo rupiah($row->stok) ?></td>
+          <td class="text-end"><?php echo rupiah($row->harga) ?></td>
+          <td><?php echo $row->deskripsi ?></td>
         </tr>
         <?php endforeach ?>
       </tbody>

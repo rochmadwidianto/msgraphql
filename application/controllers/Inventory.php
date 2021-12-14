@@ -14,7 +14,23 @@ class Inventory extends MY_Controller {
 	{
 		ifPermissions('inventory_list');
 
-		$this->page_data['inventory'] = $this->inventory_model->GetData();
+		// graphql client / request
+		$query = <<<GQL
+			query {
+				inventory {
+					id
+					nama
+					deskripsi
+					stok
+					harga
+				}
+			}
+		GQL;
+
+		$_arrData = $this->graphql_request($query);
+		// end
+
+		$this->page_data['inventory'] = $_arrData->inventory;
 		$this->load->view('inventory/list', $this->page_data);
 	}
 
@@ -22,20 +38,35 @@ class Inventory extends MY_Controller {
 	{
 		postAllowed();
 		
-		$data_id = decrypt_url($this->input->post('id'));
+		$data_id = (int)decrypt_url($this->input->post('id'));
 
 		if($data_id) {
-			
-			$_arrData = $this->inventory_model->GetDataById($data_id);
+
+			// graphql client / request
+			$query = <<<GQL
+				query {
+					inventory_by_id(id: {$data_id}) {
+						id
+						nama
+						deskripsi
+						stok
+						harga
+					}
+				}
+			GQL;
+
+			$_arrData = $this->graphql_request($query);
+			$_arrData = $_arrData->inventory_by_id;
+			// end
 
 			if(!empty($_arrData)) {
 				echo '
-					<input type="hidden" class="form-control" name="id" id="id" value="'.encrypt_url($_arrData->inv_id).'" readonly required >
+					<input type="hidden" class="form-control" name="id" id="id" value="'.encrypt_url($_arrData->id).'" readonly required >
 					<div>
 						<div class="row mb-3">
 							<label class="col-sm-2 col-4 col-form-label">Nama</label>
 							<div class="col-sm-10 col-8">
-								<input type="text" class="form-control" name="nama" id="nama" value="'.$_arrData->inv_nama.'" placeholder="Nama Barang" autofocus required >
+								<input type="text" class="form-control" name="nama" id="nama" value="'.$_arrData->nama.'" placeholder="Nama Barang" autofocus required >
 								<div class="invalid-feedback">
 								Nama Barang harus diisi!
 								</div>
@@ -44,19 +75,19 @@ class Inventory extends MY_Controller {
 						<div class="row mb-3">
 							<label class="col-sm-2 col-4 col-form-label">Stok</label>
 							<div class="col-sm-4 col-8">
-								<input type="text" class="form-control text-center currency" name="stok" id="stok" value="'.rupiah($_arrData->inv_stok).'" placeholder="Stok Barang" >
+								<input type="text" class="form-control text-center currency" name="stok" id="stok" value="'.rupiah($_arrData->stok).'" placeholder="Stok Barang" >
 							</div>
 						</div>
 						<div class="row mb-3">
 							<label class="col-sm-2 col-4 col-form-label">Harga</label>
 							<div class="col-sm-4 col-8">
-								<input type="text" class="form-control text-end currency" name="harga" id="harga" value="'.rupiah($_arrData->inv_harga).'" placeholder="Harga Barang" >
+								<input type="text" class="form-control text-end currency" name="harga" id="harga" value="'.rupiah($_arrData->harga).'" placeholder="Harga Barang" >
 							</div>
 						</div>
 						<div class="row mb-3">
 						  <label class="col-sm-2 col-form-label">Deskripsi</label>
 						  <div class="col-sm-10">
-							<textarea rows="2" name="deskripsi" id="deskripsi" class="form-control" placeholder="Deskripsi Barang">'.$_arrData->inv_deskripsi.'</textarea>
+							<textarea rows="2" name="deskripsi" id="deskripsi" class="form-control" placeholder="Deskripsi Barang">'.$_arrData->deskripsi.'</textarea>
 						  </div>
 						</div>
 					</div>

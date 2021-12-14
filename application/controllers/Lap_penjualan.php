@@ -15,7 +15,26 @@ class Lap_penjualan extends MY_Controller {
 	{
 		ifPermissions('lap_penjualan_list');
 
-		$this->page_data['lap_penjualan'] = $this->penjualan_model->GetData();
+		// graphql client / request
+		
+		// attribute / data dibawah ini disediakan oleh server namun tidak digunakan
+		// id, kons_id, kons_telp, kons_alamat, inv_id, inv_deskripsi, inv_stok, inv_harga
+		$query = <<<GQL
+			query {
+				penjualan {
+					kons_nama
+					inv_nama
+					tanggal
+					jumlah
+					nominal
+				}
+			}
+		GQL;
+
+		$_arrData = $this->graphql_request($query);
+		// end
+
+		$this->page_data['lap_penjualan'] = $_arrData->penjualan;
 		$this->load->view('lap_penjualan/list', $this->page_data);
 	}
 }
