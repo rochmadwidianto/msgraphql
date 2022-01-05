@@ -48,14 +48,7 @@
             <?php endif ?>
           </td>
           <td>
-            <?php
-              if(strtolower($row->title) == 'aplikan' && (int)$row->id === 2) {
-                $_style     = '';
-              } else {
-                $_style     = 'display: none;';
-              }
-            ?>
-            <?php echo $row->title ?> <span style="<?php echo $_style ?>" class="badge rounded-pill badge-soft-danger">Khusus <b>Aplikan</b>!</span>
+            <?php echo $row->title ?>
           </td>
         </tr>
         <?php endforeach ?>

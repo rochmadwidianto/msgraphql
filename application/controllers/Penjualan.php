@@ -38,6 +38,77 @@ class Penjualan extends MY_Controller {
 		$this->load->view('penjualan/list', $this->page_data);
 	}
 
+	public function tambah_data()
+	{
+		// konsumen
+		$_cbxKonsumen = '<option value="">Pilih Konsumen</option>';
+		foreach ($this->konsumen_model->GetData() as $row) {
+			$_cbxKonsumen .= '<option value="'.$row->kons_id.'">'.$row->kons_nama.'</option>';
+		}
+			
+		// barang
+		$_cbxBarang = '<option value="">Pilih Konsumen</option>';
+		foreach ($this->inventory_model->GetData() as $row) {
+			$_cbxBarang .= '<option value="'.$row->inv_id.'">'.$row->inv_nama.'</option>';
+		}
+
+		echo '
+			<div>
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-label">Konsumen</label>
+					<div class="col-sm-10">
+						<select class="form-control" name="konsumen" id="konsumen" placeholder="Pilih Konsumen" required >
+							<optgroup label="Data Konsumen">
+								'.$_cbxKonsumen.'
+							</optgroup>
+						</select>
+						<div class="invalid-feedback">
+							Konsumen harus dipilih!
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-label">Barang</label>
+					<div class="col-sm-10">
+						<select class="form-control" name="barang" id="cbx_barang" placeholder="Pilih Barang" required >
+							<optgroup label="Data Barang">
+								'.$_cbxBarang.'
+							</optgroup>
+						</select>
+						<div class="invalid-feedback">
+							Barang harus dipilih!
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-label">Tanggal</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control flatpickr-input" name="tanggal" id="datepicker-basic" placeholder="Tanggal Transaksi" readonly="readonly">
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-label">Jumlah</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control text-center jumlah currency" name="jumlah" id="jumlah" placeholder="Jumlah Barang" required >
+						<p class="text-muted"><small>Sisa Stok : <b><span class="label_nilai_sisa_stok">0</span></b></small></p>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-label">Harga Satuan</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control text-end nominal currency" name="nominal" id="nominal" placeholder="Harga Barang" readonly="readonly" required >
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-label">Total</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control text-end fw-semibold total currency" name="total" id="total" placeholder="Harga Total" readonly="readonly" required >
+					</div>
+				</div>
+			</div>
+		';
+	}
+
 	public function get_data_by_id()
 	{
 		postAllowed();
@@ -88,6 +159,14 @@ class Penjualan extends MY_Controller {
 			}
 
 			if(!empty($_arrData)) {
+				// get jumlah inventory yang terjual
+				$_jmlTerjual 	= $this->penjualan_model->GetTerjualByInvId($_arrData->inv_id, $_arrData->id);
+				if(!is_null($_jmlTerjual)) {
+					$_sisaStok	= ((int)$_arrData->inv_stok - (int)$_jmlTerjual);
+				} else {
+					$_sisaStok	= (int)$_arrData->inv_stok;
+				}
+
 				echo '
 					<input type="hidden" class="form-control" name="id" id="id" value="'.encrypt_url($_arrData->id).'" readonly required >
 					<div>
@@ -127,19 +206,19 @@ class Penjualan extends MY_Controller {
 							<label class="col-sm-2 col-form-label">Jumlah</label>
 							<div class="col-sm-4">
 								<input type="text" class="form-control text-center jumlah currency" name="jumlah" id="jumlah" value="'.rupiah($_arrData->jumlah).'" placeholder="Jumlah Barang" required >
-								<p class="text-muted"><small>Sisa Stok : <b><span class="label_nilai_sisa_stok">'.($_arrData->jumlah + $_arrData->inv_stok).'</span></b></small></p>
+								<p class="text-muted"><small>Sisa Stok : <b><span class="label_nilai_sisa_stok">'.$_sisaStok.'</span></b></small></p>
 							</div>
 						</div>
 						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label">Harga Satuan</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control text-end currency" name="nominal" id="nominal" value="'.rupiah($_arrData->inv_harga).'" placeholder="Harga Barang" readonly="readonly" required >
+								<input type="text" class="form-control text-end nominal currency" name="nominal" id="nominal" value="'.rupiah($_arrData->inv_harga).'" placeholder="Harga Barang" readonly="readonly" required >
 							</div>
 						</div>
 						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label">Total</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control text-end fw-semibold currency" name="total" id="total" value="'.rupiah($_arrData->nominal).'" placeholder="Harga Total" readonly="readonly" required >
+								<input type="text" class="form-control text-end fw-semibold total currency" name="total" id="total" value="'.rupiah($_arrData->nominal).'" placeholder="Harga Total" readonly="readonly" required >
 							</div>
 						</div>
 					</div>
@@ -175,10 +254,16 @@ class Penjualan extends MY_Controller {
 		$data_id = $this->input->post('id');
 		
 		$_arrData = $this->inventory_model->GetDataById($data_id);
+		// get jumlah inventory yang terjual
+		$_jmlTerjual = $this->penjualan_model->GetTerjualByInvId($data_id);
 
 		$data = array();
 		if(!empty($_arrData)) {
-			$data['sisa_stok'] 	= $_arrData->inv_stok;
+			if(!is_null($_jmlTerjual)) {
+				$data['sisa_stok'] 	= ((int)$_arrData->inv_stok - (int)$_jmlTerjual->jumlah_terjual);
+			} else {
+				$data['sisa_stok'] 	= (int)$_arrData->inv_stok;
+			}
 			$data['harga'] 		= $_arrData->inv_harga;
 		} else {
 			$data['sisa_stok'] 	= 0;

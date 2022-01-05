@@ -31,17 +31,7 @@
     <div class="row mb-3">
       <label class="col-sm-2 col-form-label">Roles</label>
       <div class="col-sm-10">
-        <?php
-          if(strtolower($role->title) == 'aplikan' && (int)$role->id === 2) {
-            $_readonly  = 'readonly';
-            $_style     = '';
-          } else {
-            $_readonly  = '';
-            $_style     = 'display: none;';
-          }
-        ?>
-        <input type="text" class="form-control" name="name" id="name" value="<?php echo $role->title ?>" <?php echo $_readonly ?> placeholder="Nama Roles" autofocus required >
-        <p class="help-block" style="<?php echo $_style ?>"><small><i>Nama Roles <b>Aplikan</b> <span class="text-danger">tidak dapat diubah</span>! Untuk mengubah silakan hubungi tim teknis.</i></small></p>
+        <input type="text" class="form-control" name="name" id="name" value="<?php echo $role->title ?>" placeholder="Nama Roles" autofocus required >
         <div class="invalid-feedback">
           Nama Roles harus diisi!
         </div>

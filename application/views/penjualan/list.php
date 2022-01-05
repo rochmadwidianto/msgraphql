@@ -24,7 +24,7 @@
   <div class="card-body">
     <h4 class="card-title">
       <?php if (hasPermissions('penjualan_add')): ?>
-        <a data-bs-toggle="modal" data-bs-target="#addModal" title="Tambah Data" class="btn btn-sm btn-outline-success waves-effect waves-light" ><i class="bx bx-plus"></i> Tambah Data</a>
+        <a data-bs-toggle="modal" data-bs-target="#addModal" title="Tambah Data" class="tambah_data btn btn-sm btn-outline-success waves-effect waves-light" ><i class="bx bx-plus"></i> Tambah Data</a>
       <?php endif ?>
     </h4>
         
@@ -77,66 +77,13 @@
         <h5 class="modal-title" id="addModalTitle"><b>Tambah</b> <small>Data</small></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Konsumen</label>
-            <div class="col-sm-10">
-              <select class="form-control" name="konsumen" placeholder="Pilih Konsumen" required >
-                <optgroup label="Data Konsumen">
-                  <option value="" >Pilih Konsumen</option>
-                  <?php foreach ($this->konsumen_model->GetData() as $row): ?>
-                    <option value="<?php echo $row->kons_id ?>" ><?php echo $row->kons_nama ?></option>
-                  <?php endforeach ?>
-                </optgroup>
-              </select>
-              <div class="invalid-feedback">
-                Kosumen harus dipilih!
-              </div>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Barang</label>
-            <div class="col-sm-10">
-              <select class="form-control" name="barang" id="cbx_barang" placeholder="Pilih Barang" required >
-                <optgroup label="Data Barang">
-                  <option value="" >Pilih Barang</option>
-                  <?php foreach ($this->inventory_model->GetData() as $row): ?>
-                    <option value="<?php echo $row->inv_id ?>" ><?php echo $row->inv_nama ?></option>
-                  <?php endforeach ?>
-                </optgroup>
-              </select>
-              <div class="invalid-feedback">
-                Barang harus dipilih!
-              </div>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Tanggal</label>
-            <div class="col-sm-4">
-              <input type="text" class="form-control flatpickr-input" name="tanggal" id="datepicker-basic" value="<?php echo date('Y-m-d') ?>" placeholder="Tanggal Transaksi" readonly="readonly" required>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Jumlah</label>
-            <div class="col-sm-4">
-              <input type="text" class="form-control text-center jumlah currency" name="jumlah" id="jumlah" value="0" placeholder="Jumlah Barang" required >
-              <p class="text-muted"><small>Sisa Stok : <b><span class="label_nilai_sisa_stok">0</span></b></small></p>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Harga Satuan</label>
-            <div class="col-sm-4">
-              <input type="text" class="form-control text-end currency" name="nominal" id="nominal" value="0" placeholder="Harga Barang" readonly="readonly" required >
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Total</label>
-            <div class="col-sm-4">
-              <input type="text" class="form-control text-end fw-semibold currency" name="total" id="total" value="0" placeholder="Harga Total" readonly="readonly" required >
-            </div>
+      <div class="modal-body" id="arrAddData">
+        <div class="text-center">
+          <div class="spinner-border text-primary m-1" role="status">
+            <span class="sr-only">Loading...</span>
           </div>
         </div>
+        <!-- get data by server side -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
@@ -214,6 +161,23 @@ $(document).ready(function() {
   });
 });
 
+// for modal tambah data
+ $(document).on('click', '.tambah_data', function (e) {
+  // To stop the click propagation up to the `tr` handler
+  e.stopPropagation();
+    
+	// memulai ajax
+	$.ajax({
+		url: "<?php echo site_url('penjualan/tambah_data')?>",
+		method: 'POST',
+		success:function(data){
+			$('#arrAddData').html(data);
+			$('#addModal').modal("show");
+		}
+	});
+})
+// end - for modal tambah data
+
 // for modal ubah data
  $(document).on('click', '.ubah_data', function (e) {
   // To stop the click propagation up to the `tr` handler
@@ -254,16 +218,16 @@ $(document).ready(function() {
       const arrData = JSON.parse(data);
 
       $('.label_nilai_sisa_stok').html(arrData.sisa_stok);
-      $('#nominal').val(formatCurrency(arrData.harga));
+      $('.nominal').val(formatCurrency(arrData.harga));
       
-      $('#jumlah').val(arrData.sisa_stok);
+      $('.jumlah').val(arrData.sisa_stok);
 
-      var jumlah  = clearCurrency($('#jumlah').val());
-      var nominal = clearCurrency($('#nominal').val());
+      var jumlah  = clearCurrency($('.jumlah').val());
+      var nominal = clearCurrency($('.nominal').val());
 
       var total = jumlah * nominal;
 
-      $('#total').val(formatCurrency(total));
+      $('.total').val(formatCurrency(total));
 
       console.log(data);
 		}
@@ -274,20 +238,28 @@ $(document).ready(function() {
 
 // for get data inventory
 $(document).on('keyup', '.jumlah', function (e) {
+  // To stop the click propagation up to the `tr` handler
+  e.stopPropagation();
 
   var sisa_stok = $('.label_nilai_sisa_stok').html();
 
-  var jumlah  = clearCurrency($('#jumlah').val());
-  var nominal = clearCurrency($('#nominal').val());
+  var jumlah  = clearCurrency($('.jumlah').val());
+  var nominal = clearCurrency($('.nominal').val());
 
   if(jumlah > sisa_stok) {
-    $('#jumlah').val(sisa_stok);
+    $('.jumlah').val(sisa_stok);
+
+    var total = sisa_stok * nominal;
+
+    $('.total').val(formatCurrency(total));
 
   } else {
     var total = jumlah * nominal;
 
-    $('#total').val(formatCurrency(total));
+    $('.total').val(formatCurrency(total));
   }
+
+  console.log();
 })
 // end - for get data inventory
 </script>

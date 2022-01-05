@@ -26,11 +26,11 @@ CREATE TABLE `inventory` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`inv_id`),
   KEY `FK_inventory_user_id` (`inv_user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*Data for the table `inventory` */
 
-insert  into `inventory`(`inv_id`,`inv_nama`,`inv_deskripsi`,`inv_stok`,`inv_harga`,`inv_user_id`,`created_at`) values (1,'Printer','3 in 1',12,'2300000.00',1,'2021-11-24 22:01:42'),(2,'Mouse Wireless','Warna Hitam',30,'150000.00',1,'2021-12-09 21:07:44');
+insert  into `inventory`(`inv_id`,`inv_nama`,`inv_deskripsi`,`inv_stok`,`inv_harga`,`inv_user_id`,`created_at`) values (1,'Printer','3 in 1',12,'2300000.00',1,'2022-01-02 22:01:42'),(2,'Mouse Wireless','Warna Hitam',30,'150000.00',1,'2022-01-02 21:07:44'),(3,'Kabel USB','2 Meter',10,'75000.00',1,'2022-01-05 11:08:01'),(4,'Kabel Type C','2 Meter',5,'120000.00',1,'2022-01-05 11:08:38'),(5,'Laptop','Multimedia. Core i-7. 8GB. 512GB SSD.',3,'7500000.00',1,'2022-01-05 11:10:57');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

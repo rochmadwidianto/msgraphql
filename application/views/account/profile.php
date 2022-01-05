@@ -179,23 +179,25 @@
                                 </div>
                             </div>
                             
-                            <!-- filter for role aplikan -->
-                            <?php if((int)logged('role') != 2): ?>
+                            <!-- filter for role administrator -->
+                            <?php if((int)logged('role') == 1): ?>
                                 <div class="row mb-3">
                                     <label class="col-sm-3 col-form-label">Roles</label>
                                     <div class="col-sm-9">
                                         <select class="form-control select2" name="role" >
                                             <optgroup label="Roles">
                                                 <?php foreach ($this->roles_model->get() as $row): ?>
-                                                <?php $sel = !empty($user->role) && $user->role==$row->id ? 'selected' : '' ?>
+                                                <?php $sel = !empty($user->role->id) && $user->role->id == $row->id ? 'selected' : '' ?>
                                                 <option value="<?php echo $row->id ?>" <?php echo $sel ?>><?php echo $row->title ?></option>
                                                 <?php endforeach ?>
                                             </optgroup>
                                         </select>
                                     </div>
                                 </div>
+                            <?php else: ?>
+                                <input type="hidden" class="form-control" name="role" id="role" placeholder="Roles" value="<?php echo $user->role->id ?>" readonly >
                             <?php endif; ?>
-                            <!-- end - filter for role aplikan -->
+                            <!-- end - filter for role administrator -->
 
                             <div class="row mb-3">
                                 <label class="col-sm-3 col-form-label">Foto</label>

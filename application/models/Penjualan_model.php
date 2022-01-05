@@ -43,6 +43,20 @@ class Penjualan_model extends CI_Model {
         return $this->db->get($this->_dbPenjualan.'.'.$this->table)->row();
 	}
 
+	public function GetTerjualByInvId($inv_id, $penj_id = null) {
+		$this->db->select('COUNT(penj_jumlah) AS jumlah_terjual');
+		$this->db->from($this->_dbPenjualan.'.'.$this->table);
+		$this->db->join($this->_dbInventory.'.inventory', $this->_dbInventory.'.inventory.inv_id = '.$this->_dbPenjualan.'.'.$this->table.'.penj_inv_id');
+		$this->db->where($this->_dbPenjualan.'.'.$this->table.'.penj_inv_id', $inv_id);
+		
+		if(!is_null($penj_id)) {
+			$this->db->where_not_in($this->_dbPenjualan.'.'.$this->table.'.penj_id', $penj_id);
+		}
+
+		$this->db->group_by($this->_dbPenjualan.'.'.$this->table.'.penj_inv_id');
+        return $this->db->get()->row();
+	}
+
 	function CreateData($data) {
 		$this->db->insert($this->_dbPenjualan.'.'.$this->table, $data);
 		return $this->db->insert_id();

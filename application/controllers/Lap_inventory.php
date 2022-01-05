@@ -20,6 +20,7 @@ class Lap_inventory extends MY_Controller {
 		$query = <<<GQL
 			query {
 				inventory {
+					id
 					nama
 					deskripsi
 					stok
@@ -31,7 +32,27 @@ class Lap_inventory extends MY_Controller {
 		$_arrData = $this->graphql_request($query);
 		// end
 
-		$this->page_data['lap_inventory'] = $_arrData->inventory;
+		$_dataList = array();
+		foreach($_arrData->inventory as $key => $list) {
+
+			// get jumlah inventory yang terjual
+			$_jmlTerjual = $this->penjualan_model->GetTerjualByInvId($list->id);
+			if(!is_null($_jmlTerjual)) {
+				$_jmlTerjual = (int)$_jmlTerjual->jumlah_terjual;
+			} else {
+				$_jmlTerjual = 0;
+			}
+
+			$_dataList[$key] = (object) array(
+				'id' => $list->id,
+				'nama' => $list->nama,
+				'deskripsi' => $list->deskripsi,
+				'stok' => ((int)$list->stok - (int)$_jmlTerjual),
+				'harga' => $list->harga
+			);
+		}
+
+		$this->page_data['lap_inventory'] = $_dataList;
 		$this->load->view('lap_inventory/list', $this->page_data);
 	}
 }
